@@ -57,6 +57,10 @@ metadata {
 				attributeState "color", action:"setColor"
 			}
 	 	}
+		standardTile("switchcandle", "device.switchcandle", width: 2, height: 2) {
+    		state "off", label: "off", icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#ffffff", action: "candleon"
+    		state "on", label: "on", icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#79b821", action: "candleoff"
+		}
 	}
 }
 
@@ -111,6 +115,19 @@ def on() {
 
 def off() {
 	log.debug "Executing 'off'"
+    sendEvent(name: "light", value: 'lightoff')
+	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"off\"}")
+}
+
+def candleon() {
+// {"action":"atmosphere","MAC":"7cc709806aeb","type":"candle"}
+	log.debug "Executing 'candleon'"
+    sendEvent(name: "light", value: 'lighton')
+	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"candle\"}")    
+}
+
+def candleoff() {
+	log.debug "Executing 'candleoff'"
     sendEvent(name: "light", value: 'lightoff')
 	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"off\"}")
 }
