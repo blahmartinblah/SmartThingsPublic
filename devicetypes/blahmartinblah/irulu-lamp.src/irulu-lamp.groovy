@@ -37,6 +37,8 @@ metadata {
 		capability "Refresh"
 		capability "Switch"
 		capability "Switch Level"
+        command "candleon"
+        command "candleoff"
 	}
 
 
@@ -47,8 +49,8 @@ metadata {
 	tiles {
 		multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true){
 			tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-				attributeState "on", label:'${name}', action:"off", icon:"st.lights.philips.hue-single", backgroundColor:"#79b821", nextState:"off"
-				attributeState "off", label:'${name}', action:"on", icon:"st.lights.philips.hue-single", backgroundColor:"#ffffff", nextState:"on"
+				attributeState "on", label:'${name}', action:"switch.off", icon:"st.lights.philips.hue-single", backgroundColor:"#79b821", nextState:"off"
+				attributeState "off", label:'${name}', action:"switch.on", icon:"st.lights.philips.hue-single", backgroundColor:"#ffffff", nextState:"on"
 			}
 			tileAttribute ("device.level", key: "SLIDER_CONTROL") {
 				attributeState "level", action:"switch level.setLevel"
@@ -57,10 +59,11 @@ metadata {
 				attributeState "color", action:"setColor"
 			}
 	 	}
-		standardTile("switchcandle", "device.switchcandle", width: 2, height: 2) {
-    		state "off", label: "off", icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#ffffff", action: "candleon"
-    		state "on", label: "on", icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#79b821", action: "candleoff"
-		}
+standardTile("tileName", "device.switch", width: 2, height: 2) {
+    state "off", label: "off", icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#ffffff", action: "candleon", nextState:"on"
+    state "on", label: "on", icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#79b821", action: "candleoff", nextState:"off"
+}
+    main("switch")
 	}
 }
 
