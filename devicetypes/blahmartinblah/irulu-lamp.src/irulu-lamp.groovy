@@ -39,6 +39,9 @@ metadata {
 		capability "Switch Level"
         command "candleon"
         command "candleoff"
+        command "nighton"
+        command "nightoff"
+attribute "atmosphere", "enum", ["candle", "night"]
 	}
 
 
@@ -59,9 +62,13 @@ metadata {
 				attributeState "color", action:"setColor"
 			}
 	 	}
-standardTile("tileName", "device.switch", width: 2, height: 2) {
-    state "off", label: "off", icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#ffffff", action: "candleon", nextState:"on"
-    state "on", label: "on", icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#79b821", action: "candleoff", nextState:"off"
+standardTile("tileName", "device.candle", width: 2, height: 2) {
+    state "off", label: '${name}', icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#ffffff", action: "candleon", nextState:"on"
+    state "on", label: '${name}', icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#79b821", action: "candleoff", nextState:"off"
+}
+standardTile("tileName", "device.night", width: 2, height: 2) {
+    state "off", label: '${name}', icon: "st.Weather.weather4", backgroundColor: "#ffffff", action: "nighton", nextState:"on"
+    state "on", label: '${name}', icon: "st.Weather.weather4", backgroundColor: "#79b821", action: "nightoff", nextState:"off"
 }
     main("switch")
 	}
@@ -112,24 +119,33 @@ def refresh() {
 
 def on() {
 	log.debug "Executing 'on'"
-    sendEvent(name: "light", value: 'lighton')
-	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"on\"}")    
+    sendEvent(name: "switch", value: 'on')
+    request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"on\"}")    
 }
 
 def off() {
 	log.debug "Executing 'off'"
-    sendEvent(name: "light", value: 'lightoff')
-	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"off\"}")
+    sendEvent(name: "switch", value: 'off')
+request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"off\"}")
 }
 
 def candleon() {
 // {"action":"atmosphere","MAC":"7cc709806aeb","type":"candle"}
 	log.debug "Executing 'candleon'"
-    sendEvent(name: "light", value: 'lighton')
-	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"candle\"}")    
+	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"atmosphere\",\"MAC\":\"" + devname + "\",\"type\":\"candle\"}")    
 }
 
 def candleoff() {
+	log.debug "Executing 'candleoff'"
+	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"off\"}")
+}
+
+def nighton() {
+	log.debug "Executing 'nighton'"
+	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"atmosphere\",\"MAC\":\"" + devname + "\",\"type\":\"night\"}")    
+}
+
+def nightoff() {
 	log.debug "Executing 'candleoff'"
     sendEvent(name: "light", value: 'lightoff')
 	request("/udp-gateway.php?udbport=6000&broadcastip=" + deviceIP + "&message={\"action\":\"light_control\",\"MAC\":\"" + devname + "\",\"type\":\"off\"}")
@@ -246,6 +262,7 @@ def setColor(value) {
        def myred = rgb[0] < 40 ? 0 : rgb[0]
        def mygreen = rgb[1] < 40 ? 0 : rgb[1]
        def myblue = rgb[2] < 40 ? 0 : rgb[2]
+       on()
        request("/udp-gateway.php?udbport=6000&broadcastip=192.168.1.255&message={\"action\":\"set_light\",\"MAC\":\"7cc709806aeb\",\"r\":" + myred + ",\"g\":" + mygreen + ",\"b\":" + myblue + ",\"x\":0}")
 }
 
