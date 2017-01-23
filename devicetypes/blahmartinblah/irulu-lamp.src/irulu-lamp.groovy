@@ -75,11 +75,11 @@ attribute "atmosphere", "enum", ["candle", "night"]
 				attributeState "color", action:"setColor"
 			}
 	 	}
-standardTile("tileName", "device.candle", width: 2, height: 2) {
+standardTile("atmospherecandle", "device.candle", width: 2, height: 2) {
     state "off", label: '${name}', icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#ffffff", action: "candleon", nextState:"on"
     state "on", label: '${name}', icon: "st.Seasonal Winter.seasonal-winter-011", backgroundColor: "#79b821", action: "candleoff", nextState:"off"
 }
-standardTile("tileName", "device.night", width: 2, height: 2) {
+standardTile("atmospherenight", "device.night", width: 2, height: 2) {
     state "off", label: '${name}', icon: "st.Weather.weather4", backgroundColor: "#ffffff", action: "nighton", nextState:"on"
     state "on", label: '${name}', icon: "st.Weather.weather4", backgroundColor: "#79b821", action: "nightoff", nextState:"off"
 }
