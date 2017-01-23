@@ -27,6 +27,19 @@ preferences {
     input("devicePort", "text", title: "Port", description: "The device Port",required:true)
     input("gatewayIP", "text", title: "gatewayIP", description: "The gateway IP",required:true)
     input("gatewayPort", "text", title: "gatewayPort", description: "The gateway Port",required:true)    
+
+	input("color", "enum", title: "Default Color", required: false, multiple:false, value: "Previous", options: [
+                    ["Previous":"Previous"],
+					["Soft White":"Soft White - Default"],
+					["White":"White - Concentrate"],
+					["Daylight":"Daylight - Energize"],
+					["Warm White":"Warm White - Relax"],
+					"Red","Green","Blue","Yellow","Orange","Purple","Pink","Cyan","Random","Custom"])
+                 
+	
+	input("level", "enum", title: "Default Level", required: false, value: 100, options: [[0:"Previous"],[10:"10%"],[20:"20%"],[30:"30%"],[40:"40%"],[50:"50%"],[60:"60%"],[70:"70%"],[80:"80%"],[90:"90%"],[100:"100%"]])
+
+
 }
 
 metadata {
